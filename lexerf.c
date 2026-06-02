@@ -4,7 +4,7 @@
 #include <ctype.h>
 
 typedef enum {
-    INT, KEYWORD, SEPARATOR, END_OF_TOKENS,
+    BEGINNING, INT, KEYWORD, SEPARATOR, END_OF_TOKENS,
 } TokenType;
 
 typedef struct { TokenType typel char *value; } Token;
@@ -28,6 +28,8 @@ void print_token(Token token) {
         case END_OF_TOKENS:
             printf("END OF TOKENS\n");
             break;
+        case BEGINNING: 
+            printf("BEGINNING\n");
     }
 }
 
