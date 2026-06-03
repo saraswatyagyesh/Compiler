@@ -166,6 +166,9 @@ Node *paser(Token *tokens) {
                     case INT:
                         printf("INTEGER\n");
                         break;
+                    case IDENTIFIER:
+                        printf("IDENTIFIER\n");
+                        break;
                     case BEGINNING:
                         //
                     case END_OF_TOKENS: 

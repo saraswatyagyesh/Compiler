@@ -2,7 +2,7 @@
 #define LEXER_H_
 
 typedef enum { 
-    INT, KEYWORD, SEPARATOR, OPERATOR, END_OF_TOKENS,
+    INT, KEYWORD, SEPARATOR, OPERATOR, END_OF_TOKENS, IDENTIFIER,
 } TokenType;
 
 typedef struct { TokenType type; char *value;} Token;
