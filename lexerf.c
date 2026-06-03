@@ -94,7 +94,7 @@ Token *lexer(FILE *file) {
     current[length + 1] = '\0';
     int current_index = 0;
 
-    Token *tokens = malloc(sizeof(Token));
+    Token *tokens = malloc(sizeof(Token) * 12);
     tokens_index = 0;
 
     while (current[current_index] != '\0') {
