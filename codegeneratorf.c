@@ -13,6 +13,20 @@ void traverse_tree(Node *node, int is_left, FILE *file){
     }
     if (strcmp(node->value, "EXIT") == 0) { fprintf(file, "    mov rax, 60\n")}
     if (strcmp(node->value, "(") == 0) { }
+    if (node->type == OPERATOR) { 
+        if (strcmp(node->value, "+") == 0) {
+            fprintf(file, "    add rdi, %s\n", node->left->value);
+            fprintf(file, "    add rdi, %s\n", node->right->value);
+            node->left = NULL;
+            node->right = NULL;
+        }
+        else if( strcmp(node->value, "-") == 0) {
+            fprintf(file, "    mov rdi, %s\n", node->left->value);
+            fprintf(file, "    sub rdi, %s\n", node->right->value);
+            node->left = NULL;
+            node->right = NULL;
+        }
+    }
     if (node->type == INT){ fprintf(file, "    mov rdi, %s\n", node->value);}
     if (strcmp(node->value, ")") == 0) { }
     if (strcmp(node->value, ";") == 0) {fprintf(file, "    syscall\n")}

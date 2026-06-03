@@ -4,7 +4,7 @@
 #include <ctype.h>
 
 typedef enum {
-    BEGINNING, INT, KEYWORD, SEPARATOR, END_OF_TOKENS,
+    BEGINNING, INT, KEYWORD, SEPARATOR, OPERATOR, END_OF_TOKENS,
 } TokenType;
 
 typedef struct { TokenType typel char *value; } Token;
@@ -25,11 +25,15 @@ void print_token(Token token) {
         case SEPARATOR:
             printf("TOKEN TYPE: SEPARATOR\n");
             break;
+        case OPERATOR:
+            printf("TOKEN TYPE: OPERATOR\n");
+            break;
         case END_OF_TOKENS:
             printf("END OF TOKENS\n");
             break;
         case BEGINNING: 
             printf("BEGINNING\n");
+            break;
     }
 }
 
@@ -66,12 +70,12 @@ Token *generate_keyword(char *current, int *current_index) {
     return token;
 }
 
-Token *generate_separator(char *current, int *current_index){
+Token *generate_separator_or_operator(char *current, int *current_index, TokenType type){
     Token *token = malloc(sizeof(Token));
     token->value = malloc(sizeof(char) * 2);
     token->value[0] = current[*curent_index];
     token->value[1] = '\0';
-    token->type = SEPARATOR;
+    token->type = type;
     return token;
 }
 
@@ -96,19 +100,29 @@ Token *lexer(FILE *file) {
     while (current[current_index] != '\0') {
         Token *token = malloc(sizeof(Token));
         if (current[current_index] == ';') {
-            token = generate_separator(current, &current_index);
+            token = generate_separator_or_operator(current, &current_index, SEPARATOR);
             token[tokens_index] = *token;
             token_index++;
         }
         else if (current[current_index] == '(') {
-            token = generate_separator(current, &current_index);
+            token = generate_separator_or_operator(current, &current_index, SEPARATOR);
             token[tokens_index] = *token;
             token_index++;
         }
         else if (current[current_index] == ')') {
-            token = generate_separator(current, &current_index);
+            token = generate_separator_or_operator(current, &current_index, SEPARATOR);;
             token[tokens_index] = *token;
             token_index++;
+        }
+        else if (current[current_index] == '+') {
+            token = generate_separator_or_operator(current, &current_index, OPERATOR);
+            tokens[tokens_index] = *token;
+            tokens_index++;
+        }
+        else if (current[curent_index] == '-') {
+            token = generate_separator_or_operator(current, &current_index, OPERATOR);
+            tokens[tokens_index] = *token;
+            tokens_index++;
         }
         else if (isdigit(current[current_index])) {
             token = generate_number(current, &current_index);

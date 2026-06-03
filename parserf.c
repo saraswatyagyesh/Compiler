@@ -42,6 +42,37 @@ void print_error(char *error_type){
     exit(1);
 }
 
+Token *generate_operation_nodes(Token *current_token, Node *current_node){
+    int number_of_iterations = 0;
+    while (current_token->type == INT || current_token->type == OPERATOR){
+        number_of_iterations++;
+        Node *oper_node = malloc(sizeof(Node));
+        oper_node->left->left = oper_node;
+        printf("CURRENT_TOKEN 1: %s\n", current_token->value);
+        current_token--;
+        if(current_token->type == INT) {
+            Node *expr_node = malloc(sizeof(Node));
+            expr_node = init_node(expr_node, current_token->value, INT);
+            oper_node->left = expr_node;
+            printf("CURRENT TOKEN 2: %s\n", current_token->value);
+            current_token++;
+            printf("CURRENT TOKEN 3: %s\n", current_token->value);
+            if(current_token->type != INT || curent_token == NULL){
+                printf("Syntax Error here\n");
+                exit(1);
+            }
+            Node *second_expr_node = malloc(sizeof(Node));
+            second_expr_node = init_node(second_expr_node, current_token->value, INT);
+            oper_node->right = second_expr_node;
+        }
+        if(current_token->type == OPERATOR) {
+            //
+        }
+        current_token++;
+    }
+    return current_token;
+}
+
 Node *paser(Token *tokens) {
     Token *current_token = &tokens[0];
     Node *root = malloc(sizeof(Node));
@@ -74,10 +105,19 @@ Node *paser(Token *tokens) {
                                 print_error("Invalid syntax on INT");
                             }
                             if (current_token->type == INT) {
-                                Node *expr_node = malloc(sizeof(Node));
-                                expr_node = init_node(expr_node, current_token->value, INT);
-                                current->left->left = expr_node;
                                 current_token++;
+                                if(current_token->type == OPERATOR && current_token != NULL){
+                                    current_token = generate_operation_nodes(current_token, current);
+                                    current_token--;
+                                }
+                                else {
+                                    current_token--;
+                                    Node *expr_node = malloc(sizeof(Node));
+                                    expr_node = init_node(expr_node, current_token->value, INT);
+                                    current->left->left = expr_node;
+                                }
+                                current_token++;
+                                printf("current_token: %s\n", current_token->value);
                                 if (current_token->type == END_OF_TOKENS){
                                     print_error("Invalid Syntax on CLOSE");
                                 }
@@ -106,6 +146,8 @@ Node *paser(Token *tokens) {
                     } 
 
                     case SEPARATOR: 
+                        break;
+                    case OPERATOR:
                         break;
                     case INT:
                         printf("INTEGER\n");
